@@ -1,7 +1,6 @@
 import json
 
-# This variable is used in this case because the host is shared
-host = 'http://127.0.0.1:5000'
+from django.conf import settings
 
 # A dict where each filter is related with the proper endpoint to make consults.
 sources = {
@@ -15,7 +14,7 @@ class Noaa:
     @staticmethod
     async def get_current_temp(lat, lon, source, session):
         # info = await requests.get(host+sources.get(source).format(lat, lon))
-        async with session.get(host + sources.get(source).format(lat, lon), retry_attempts=3) as response:
+        async with session.get(settings.PROVIDERS_HOST + sources.get(source).format(lat, lon), retry_attempts=3) as response:
             info = await response.read()
             info = json.loads(info)
             info = info['today']['current']
@@ -26,7 +25,7 @@ class WeatherDotCom:
     @staticmethod
     async def get_current_temp(lat, lon, source, session):
         data = {"lat": lat, "lon": lon}
-        async with session.post(host + sources.get(source).format(lat, lon), json=data, retry_attempts=3) as response:
+        async with session.post(settings.PROVIDERS_HOST + sources.get(source).format(lat, lon), json=data, retry_attempts=3) as response:
             info = await response.read()
             info = json.loads(info)
             info = info['query']['results']['channel']
@@ -37,7 +36,7 @@ class WeatherDotCom:
 class Accuweather:
     @staticmethod
     async def get_current_temp(lat, lon, source, session):
-        async with session.get(host+sources.get(source).format(lat, lon), retry_attempts=3) as response:
+        async with session.get(settings.PROVIDERS_HOST+sources.get(source).format(lat, lon), retry_attempts=3) as response:
             info = await response.read()
             info = json.loads(info)
             info = info['simpleforecast']['forecastday'][0]['current']
