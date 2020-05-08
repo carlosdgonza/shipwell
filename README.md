@@ -22,6 +22,7 @@ Host:  http://127.0.0.1:8000/
 ### weather
 GET /weather/?latitude=55&longitude=33&filters=noaa,weather.com
 
+By passing a latitude, a longitude and a list of providers, the current average temperature from all those providers will be returned.
 ## Tests
 ```bash
 (env)pytest
